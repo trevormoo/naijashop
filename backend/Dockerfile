@@ -62,8 +62,13 @@ RUN chown -R www-data:www-data /var/www/html \
 
 # Copy PHP configuration
 COPY docker/php.ini /usr/local/etc/php/conf.d/custom.ini
+
+# Copy and prepare startup script
+COPY docker/start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
 # Expose port
 EXPOSE 8000
 
-# Start command
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Start command (runs migrations then starts server)
+CMD ["/usr/local/bin/start.sh"]
