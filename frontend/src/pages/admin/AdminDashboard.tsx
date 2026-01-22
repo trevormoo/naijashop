@@ -13,7 +13,7 @@ import {
   CheckCircle,
   XCircle,
   Eye,
-  MoreHorizontal,
+  
   Calendar,
   Sparkles,
   Activity,
@@ -22,7 +22,7 @@ import {
   Loader2,
   RefreshCw,
   ChevronRight,
-  Zap,
+
   Target,
   Award,
 } from 'lucide-react';

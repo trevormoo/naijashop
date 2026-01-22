@@ -11,7 +11,6 @@ import {
   User,
   Phone,
   Sparkles,
-  ShieldCheck,
   ArrowRight,
   Loader2,
   CheckCircle,

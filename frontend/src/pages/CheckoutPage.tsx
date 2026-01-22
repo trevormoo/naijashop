@@ -48,7 +48,7 @@ const steps = [
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
-  const { cart, refreshCart } = useCart();
+  const { cart } = useCart();
   const { user, isAuthenticated } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [step, setStep] = useState(1);
@@ -155,14 +155,11 @@ export default function CheckoutPage() {
         notes: notes,
       });
 
-      const order = orderResponse.data.data;
+      const order = (orderResponse as any).data.data;
 
-      const paymentResponse = await paymentsApi.initialize({
-        order_id: order.id,
-        callback_url: `${window.location.origin}/payment/callback`,
-      });
+      const paymentResponse = await paymentsApi.initialize(order.id);
 
-      const { authorization_url } = paymentResponse.data;
+      const { authorization_url } = (paymentResponse as any).data;
       window.location.href = authorization_url;
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Failed to place order');
@@ -806,16 +803,18 @@ export default function CheckoutPage() {
                     <span className="text-gray-600">Subtotal</span>
                     <span className="font-medium">₦{cart.subtotal.toLocaleString()}</span>
                   </div>
-                  {cart.discount > 0 && (
-                    <div className="flex justify-between text-sm text-emerald-600">
-                      <span>Discount</span>
-                      <span>-₦{cart.discount.toLocaleString()}</span>
-                    </div>
-                  )}
+                  {(cart.discount ?? 0) > 0 && (
+                  <div className="flex justify-between text-sm text-emerald-600">
+                    <span>Discount</span>
+                    <span>-₦{(cart.discount ?? 0).toLocaleString()}</span>
+                  </div>
+                )}
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Shipping</span>
                     <span className="font-medium">
-                      {cart.shipping_cost > 0 ? `₦${cart.shipping_cost.toLocaleString()}` : 'Free'}
+                      {(cart.shipping_cost ?? 0) > 0
+                        ? `₦${(cart.shipping_cost ?? 0).toLocaleString()}`
+                        : 'Free'}
                     </span>
                   </div>
                 </div>

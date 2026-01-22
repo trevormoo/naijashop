@@ -43,10 +43,11 @@ export default function OrderDetailPage() {
   }, [id]);
 
   const fetchOrder = async () => {
-    setIsLoading(true);
-    try {
-      const response = await ordersApi.getById(Number(id));
-      setOrder(response.data.data);
+  setIsLoading(true);
+  try {
+    const response = await ordersApi.getOne(Number(id));
+    const res = response as any;
+    setOrder(res.data.data);
     } catch (error) {
       console.error('Failed to fetch order:', error);
       toast.error('Failed to load order details');
@@ -223,12 +224,13 @@ export default function OrderDetailPage() {
                       </Link>
                       <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
                       <p className="text-sm text-gray-500">
-                        Price: ₦{item.price.toLocaleString()} each
+                        Price: ₦{(item.price ?? item.unit_price).toLocaleString()} each
+
                       </p>
                     </div>
                     <div className="text-right">
                       <p className="font-semibold">
-                        ₦{(item.price * item.quantity).toLocaleString()}
+                        ₦{(((item.price ?? item.unit_price) * item.quantity)).toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -256,8 +258,8 @@ export default function OrderDetailPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
                   <span>
-                    {order.shipping_cost > 0
-                      ? `₦${order.shipping_cost.toLocaleString()}`
+                    {(order.shipping_cost ?? 0) > 0
+                      ? `₦${(order.shipping_cost ?? 0).toLocaleString()}`
                       : 'Free'}
                   </span>
                 </div>

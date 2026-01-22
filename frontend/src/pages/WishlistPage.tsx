@@ -19,17 +19,18 @@ export default function WishlistPage() {
   }, []);
 
   const fetchWishlist = async () => {
-    setIsLoading(true);
-    try {
-      const response = await wishlistApi.getAll();
-      setProducts(response.data.data);
-    } catch (error) {
-      console.error('Failed to fetch wishlist:', error);
-      toast.error('Failed to load wishlist');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  setIsLoading(true);
+  try {
+    const response = await wishlistApi.get();
+    const res = response as any;
+    setProducts(res.data.data);
+  } catch (error) {
+    console.error('Failed to fetch wishlist:', error);
+    toast.error('Failed to load wishlist');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleRemove = async (productId: number) => {
     setRemovingIds((prev) => new Set(prev).add(productId));

@@ -22,8 +22,10 @@ export default function PaymentCallbackPage() {
       }
 
       try {
-        const response = await paymentsApi.verify(reference);
-        const { status: paymentStatus, order } = response.data;
+        const response = await paymentsApi.verify(reference); // ✅ call backend
+        const res = response as any;
+
+        const { status: paymentStatus, order } = res.data;
 
         if (paymentStatus === 'success') {
           setStatus('success');

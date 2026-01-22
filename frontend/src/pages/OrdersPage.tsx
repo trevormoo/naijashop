@@ -47,8 +47,9 @@ export default function OrdersPage() {
         page: currentPage,
         status: statusFilter || undefined,
       });
-      setOrders(response.data.data);
-      setTotalPages(response.data.meta.last_page);
+      const res = response as any;
+      setOrders(res.data.data);
+      setTotalPages(res.data.meta.last_page);
     } catch (error) {
       console.error('Failed to fetch orders:', error);
     } finally {

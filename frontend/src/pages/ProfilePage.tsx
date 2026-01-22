@@ -17,7 +17,6 @@ import {
   Eye,
   EyeOff,
   CheckCircle,
-  Settings,
   Bell,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';

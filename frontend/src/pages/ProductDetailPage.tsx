@@ -18,20 +18,17 @@ import {
   Sparkles,
   BadgeCheck,
   Clock,
-  MapPin,
+
 } from 'lucide-react';
 import { productsApi } from '@/services/api';
 import { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
-import { useAuth } from '@/context/AuthContext';
-import LoadingSpinner from '@/components/common/LoadingSpinner';
 import ProductCard from '@/components/products/ProductCard';
 import toast from 'react-hot-toast';
 
 export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { addToCart } = useCart();
-  const { isAuthenticated } = useAuth();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isAddingToCart, setIsAddingToCart] = useState(false);

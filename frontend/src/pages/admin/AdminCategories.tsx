@@ -7,7 +7,7 @@ import {
   Search,
   Loader2,
   FolderTree,
-  Image,
+  
 } from 'lucide-react';
 import { adminApi } from '@/services/api';
 import { Category } from '@/types';
@@ -51,7 +51,8 @@ export default function AdminCategories() {
     setIsLoading(true);
     try {
       const response = await adminApi.categories.getAll();
-      setCategories(response.data.data);
+      const res = response as any;
+      setCategories(res.data.data);
     } catch (error) {
       console.error('Failed to fetch categories:', error);
       toast.error('Failed to load categories');

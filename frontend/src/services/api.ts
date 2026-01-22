@@ -31,12 +31,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    const message = (error.response?.data as { message?: string })?.message || 'An error occurred';
+    const message =
+      (error.response?.data as { message?: string })?.message || 'An error occurred';
 
-    // Handle specific error codes
     switch (error.response?.status) {
       case 401:
-        // Unauthorized - clear token and redirect to login
         localStorage.removeItem('auth_token');
         if (window.location.pathname !== '/login') {
           window.location.href = '/login';
@@ -49,7 +48,6 @@ api.interceptors.response.use(
         toast.error('Resource not found.');
         break;
       case 422:
-        // Validation errors are handled by the calling code
         break;
       case 429:
         toast.error('Too many requests. Please slow down.');
@@ -60,6 +58,8 @@ api.interceptors.response.use(
       default:
         if (!error.response) {
           toast.error('Network error. Please check your connection.');
+        } else {
+          toast.error(message);
         }
     }
 

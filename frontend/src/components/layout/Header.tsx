@@ -20,7 +20,7 @@ import {
   Gift,
   Percent,
   Headphones,
-  Laptop,
+  
   Shirt,
   Home,
   Smartphone,

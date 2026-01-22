@@ -19,6 +19,9 @@ export interface User {
   last_login_at?: string;
   created_at: string;
   updated_at: string;
+  orders_count?: number;
+  wishlist_count?: number;
+  reviews_count?: number;
 }
 
 // Category Types
@@ -123,6 +126,9 @@ export interface Cart {
   formatted_tax: string;
   formatted_total: string;
   updated_at: string;
+  discount?: number;
+  shipping_cost?: number;
+  coupon?: { code: string };
 }
 
 // Order Types
@@ -134,6 +140,7 @@ export interface OrderItem {
   product_image?: string;
   quantity: number;
   unit_price: number;
+  price?: number;
   subtotal: number;
   discount_amount: number;
   tax_amount: number;
@@ -178,6 +185,7 @@ export interface Order {
   coupon_discount: number;
   billing: OrderAddress;
   shipping: OrderAddress & { method?: string; tracking_number?: string };
+  shipping_address?: OrderAddress & { method?: string; tracking_number?: string };
   notes?: string;
   items_count: number;
   can_be_cancelled: boolean;
@@ -198,6 +206,8 @@ export interface Order {
   formatted_shipping: string;
   formatted_tax: string;
   formatted_total: string;
+  shipping_cost?: number;
+  payment_method?: string;
 }
 
 // Payment Types

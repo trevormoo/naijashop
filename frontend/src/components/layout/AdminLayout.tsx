@@ -6,11 +6,10 @@ import {
   ShoppingCart,
   Users,
   FolderTree,
-  Settings,
   LogOut,
   Menu,
   X,
-  ChevronDown,
+ 
   Bell
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
