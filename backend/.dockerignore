@@ -40,3 +40,4 @@ docs/
 docker-compose.yml
 docker/*
 !docker/php.ini
+!docker/start.sh
