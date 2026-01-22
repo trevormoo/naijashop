@@ -37,6 +37,6 @@ bootstrap/cache/*
 docs/
 
 # Docker
-Dockerfile
 docker-compose.yml
-docker/
+docker/*
+!docker/php.ini
