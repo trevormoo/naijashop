@@ -13,12 +13,15 @@ RUN apk add --no-cache \
     unzip \
     libzip-dev \
     icu-dev \
-    mysql-client
+    mysql-client \
+    postgresql-dev \
+    postgresql-client
 
-# Install PHP extensions
+# Install PHP extensions (MySQL + PostgreSQL)
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         pdo_mysql \
+        pdo_pgsql \
         mbstring \
         exif \
         pcntl \
