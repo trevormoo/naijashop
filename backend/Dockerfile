@@ -59,7 +59,7 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Copy PHP configuration
-COPY docker/php.ini /usr/local/etc/php/conf.d/custom.ini
+COPY ./docker/php.ini /usr/local/etc/php/conf.d/custom.ini
 # Expose port
 EXPOSE 8000
 
