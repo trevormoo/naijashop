@@ -8,13 +8,14 @@ services:
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
+    plan: free
     envVars:
       - key: APP_NAME
         value: NaijaShop
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
-        value: false
+        value: "false"
       - key: APP_KEY
         generateValue: true
       - key: APP_URL
@@ -25,10 +26,6 @@ services:
       - key: DB_CONNECTION
         value: pgsql
       - key: DATABASE_URL
-        fromDatabase:
-          name: naijashop-db
-          property: connectionString
-      - key: DB_URL
         fromDatabase:
           name: naijashop-db
           property: connectionString
@@ -44,18 +41,8 @@ services:
         sync: false
       - key: PAYSTACK_SECRET_KEY
         sync: false
-    startCommand: |
-      php artisan config:clear && \
-      php artisan migrate --force && \
-      php artisan config:cache && \
-      php artisan route:cache && \
-      php artisan serve --host=0.0.0.0 --port=$PORT
     healthCheckPath: /api/health
 
-  # PostgreSQL Database
-  - type: pserv
-    name: naijashop-db
-    runtime: postgres
+databases:
+  - name: naijashop-db
     plan: free
-    databases:
-      - name: naijashop
