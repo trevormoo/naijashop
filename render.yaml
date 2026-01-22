@@ -28,6 +28,10 @@ services:
         fromDatabase:
           name: naijashop-db
           property: connectionString
+      - key: DB_URL
+        fromDatabase:
+          name: naijashop-db
+          property: connectionString
       - key: CACHE_DRIVER
         value: file
       - key: SESSION_DRIVER
@@ -40,13 +44,11 @@ services:
         sync: false
       - key: PAYSTACK_SECRET_KEY
         sync: false
-    buildCommand: |
-      cd /var/www/html && \
+    startCommand: |
+      php artisan config:clear && \
+      php artisan migrate --force && \
       php artisan config:cache && \
       php artisan route:cache && \
-      php artisan view:cache
-    startCommand: |
-      php artisan migrate --force && \
       php artisan serve --host=0.0.0.0 --port=$PORT
     healthCheckPath: /api/health
 
