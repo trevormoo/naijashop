@@ -187,9 +187,9 @@ export default function Footer() {
             <div className="flex items-center gap-4">
               <span className="text-gray-500 text-sm">Secure Payments:</span>
               <div className="flex items-center gap-2">
-                <img src="/images/paystack.png" alt="Paystack" className="h-6" />
-                <img src="/images/visa.png" alt="Visa" className="h-6" />
-                <img src="/images/mastercard.png" alt="Mastercard" className="h-6" />
+                <img src="/images/paystack.svg" alt="Paystack" className="h-6" />
+                <img src="/images/visa.svg" alt="Visa" className="h-6" />
+                <img src="/images/mastercard.svg" alt="Mastercard" className="h-6" />
               </div>
             </div>
           </div>

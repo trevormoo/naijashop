@@ -161,17 +161,17 @@ export default function HomePage() {
         <div className="container-custom">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { icon: Truck, title: 'Free Delivery', desc: 'Orders over ₦50,000', color: 'emerald' },
-              { icon: Shield, title: 'Secure Shopping', desc: '100% Protected', color: 'blue' },
-              { icon: CreditCard, title: 'Easy Payments', desc: 'Multiple Options', color: 'purple' },
-              { icon: Headphones, title: '24/7 Support', desc: 'Always Available', color: 'orange' },
+              { icon: Truck, title: 'Free Delivery', desc: 'Orders over ₦50,000', bgColor: 'bg-emerald-100', textColor: 'text-emerald-600' },
+              { icon: Shield, title: 'Secure Shopping', desc: '100% Protected', bgColor: 'bg-blue-100', textColor: 'text-blue-600' },
+              { icon: CreditCard, title: 'Easy Payments', desc: 'Multiple Options', bgColor: 'bg-purple-100', textColor: 'text-purple-600' },
+              { icon: Headphones, title: '24/7 Support', desc: 'Always Available', bgColor: 'bg-orange-100', textColor: 'text-orange-600' },
             ].map((feature, i) => (
               <div
                 key={i}
                 className="group p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:border-emerald-200 hover:shadow-lg hover:shadow-emerald-100/50 transition-all duration-300"
               >
-                <div className={`w-14 h-14 rounded-2xl bg-${feature.color}-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <feature.icon className={`w-7 h-7 text-${feature.color}-600`} />
+                <div className={`w-14 h-14 rounded-2xl ${feature.bgColor} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <feature.icon className={`w-7 h-7 ${feature.textColor}`} />
                 </div>
                 <h3 className="font-bold text-gray-900 mb-1">{feature.title}</h3>
                 <p className="text-sm text-gray-500">{feature.desc}</p>
@@ -203,7 +203,7 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {(categories as { categories: Category[] })?.categories?.map((category, i) => (
+              {(categories as { data: Category[] })?.data?.map((category, i) => (
                 <Link
                   key={category.id}
                   to={`/category/${category.slug}`}
@@ -273,7 +273,7 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {(featuredProducts as { products?: Product[] })?.products?.map((product) => (
+              {(featuredProducts as { data?: Product[] })?.data?.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
