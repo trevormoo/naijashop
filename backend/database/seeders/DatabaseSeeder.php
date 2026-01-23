@@ -53,6 +53,7 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Comfortable wireless headphones with deep bass.',
                 'category_id' => $electronics?->id,
                 'is_featured' => true,
+                'image_url' => 'https://images.unsplash.com/photo-1518443895471-66b3d9f0a6c0',
             ],
             [
                 'name' => 'Smart Watch',
@@ -61,6 +62,7 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Track your fitness and notifications.',
                 'category_id' => $electronics?->id,
                 'is_featured' => true,
+                'image_url' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
             ],
             [
                 'name' => 'Classic Hoodie',
@@ -69,21 +71,25 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Soft, comfy hoodie for everyday wear.',
                 'category_id' => $fashion?->id,
                 'is_featured' => false,
+                'image_url' => 'https://images.unsplash.com/photo-1520975916090-3105956dac38',
             ],
         ];
 
         foreach ($products as $p) {
             // If you don't have "slug" column, swap to: ['name' => $p['name']]
-            Product::updateOrCreate(
-                ['slug' => $p['slug']],
-                [
-                    'name' => $p['name'],
-                    'price' => $p['price'],
-                    'description' => $p['description'],
-                    'category_id' => $p['category_id'],
-                    'is_featured' => $p['is_featured'],
-                ]
-            );
+            foreach ($products as $p) {
+                Product::updateOrCreate(
+                    ['slug' => $p['slug']],
+                    [
+                        'name' => $p['name'],
+                        'price' => $p['price'],
+                        'description' => $p['description'],
+                        'category_id' => $p['category_id'],
+                        'is_featured' => $p['is_featured'],
+                        'image_url' => $p['image_url'], // 👈 ADD THIS LINE
+                    ]
+                );
+            }
         }
     }
 }
