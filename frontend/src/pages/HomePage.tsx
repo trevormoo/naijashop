@@ -221,8 +221,12 @@ export default function HomePage() {
 
                   {/* Icon/Image */}
                   <div className={`absolute ${i === 0 ? 'top-6 right-6 text-6xl' : 'top-4 right-4 text-4xl'} opacity-80`}>
-                    {category.image ? (
-                      <img src={category.image} alt="" className={`${i === 0 ? 'w-20 h-20' : 'w-12 h-12'} object-contain`} />
+                    {(category.image_url || category.image) ? (
+                      <img
+                        src={category.image_url || category.image}
+                        alt={category.name}
+                        className={`${i === 0 ? 'w-20 h-20' : 'w-12 h-12'} object-contain`}
+                      />
                     ) : (
                       <span className="text-white/30 font-bold">{category.name[0]}</span>
                     )}

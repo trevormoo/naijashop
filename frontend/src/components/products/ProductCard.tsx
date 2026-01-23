@@ -17,7 +17,11 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isInWishlist, setIsInWishlist] = useState(product.in_wishlist || false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
-
+  const productImage =
+  product.image_url ||
+  product.primary_image ||
+  'https://via.placeholder.com/600x600?text=NaijaShop';
+  
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -66,7 +70,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
 
         <img
-          src={product.primary_image || '/images/placeholder-product.png'}
+          src={productImage}
           alt={product.name}
           className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${
             isImageLoaded ? 'opacity-100' : 'opacity-0'
