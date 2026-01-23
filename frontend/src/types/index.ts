@@ -27,6 +27,7 @@ export interface User {
 // Category Types
 export interface Category {
   id: number;
+  image_url?: string;
   name: string;
   slug: string;
   description?: string;
@@ -62,6 +63,8 @@ export interface Product {
   description?: string;
   price: number;
   formatted_price: string;
+  image_url?: string | null;
+  primary_image?: string | null;
   compare_price?: number;
   discount_percentage?: number;
   category_id?: number;
@@ -85,7 +88,6 @@ export interface Product {
   meta_description?: string;
   tags: string[];
   attributes: Record<string, string>;
-  primary_image?: string;
   images: ProductImage[];
   category?: Category;
   in_wishlist?: boolean;
