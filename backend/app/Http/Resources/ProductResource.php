@@ -47,8 +47,9 @@ class ProductResource extends JsonResource
             'tags' => $this->tags ?? [],
             'attributes' => $this->attributes ?? [],
 
-            // Primary image
+            // Primary image (both fields for compatibility)
             'primary_image' => $this->primary_image_url,
+            'image_url' => $this->primary_image_url,
 
             // All images
             'images' => ProductImageResource::collection($this->whenLoaded('images')),

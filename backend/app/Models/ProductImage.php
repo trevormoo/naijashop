@@ -51,12 +51,12 @@ class ProductImage extends Model
             }
         });
 
-        // Delete file when model is deleted
+        // Delete file when model is deleted (only for local files)
         static::deleting(function ($image) {
-            if ($image->image_path) {
+            if ($image->image_path && !str_starts_with($image->image_path, 'http')) {
                 Storage::disk('public')->delete($image->image_path);
             }
-            if ($image->thumbnail_path) {
+            if ($image->thumbnail_path && !str_starts_with($image->thumbnail_path, 'http')) {
                 Storage::disk('public')->delete($image->thumbnail_path);
             }
         });
@@ -75,6 +75,10 @@ class ProductImage extends Model
      */
     public function getUrlAttribute(): string
     {
+        // Support external URLs (e.g., Unsplash)
+        if (str_starts_with($this->image_path, 'http://') || str_starts_with($this->image_path, 'https://')) {
+            return $this->image_path;
+        }
         return asset('storage/' . $this->image_path);
     }
 
@@ -83,9 +87,14 @@ class ProductImage extends Model
      */
     public function getThumbnailUrlAttribute(): ?string
     {
-        return $this->thumbnail_path
-            ? asset('storage/' . $this->thumbnail_path)
-            : $this->url;
+        if ($this->thumbnail_path) {
+            // Support external URLs
+            if (str_starts_with($this->thumbnail_path, 'http://') || str_starts_with($this->thumbnail_path, 'https://')) {
+                return $this->thumbnail_path;
+            }
+            return asset('storage/' . $this->thumbnail_path);
+        }
+        return $this->url;
     }
 
     /**
