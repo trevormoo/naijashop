@@ -163,7 +163,7 @@ class Product extends Model
     public function getPrimaryImageUrlAttribute(): ?string
     {
         $primaryImage = $this->images()->where('is_primary', true)->first();
-        return $primaryImage ? asset('storage/' . $primaryImage->image_path) : null;
+        return $primaryImage ? $primaryImage->url : null;
     }
 
     /**
