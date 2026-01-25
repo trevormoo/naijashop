@@ -333,11 +333,12 @@ export const adminApi = {
       request({ method: 'PUT', url: `/admin/orders/${id}/status`, data: { status } }),
   },
 
-  // Customers
-  customers: {
-    getAll: (params?: { page?: number; per_page?: number; search?: string }) =>
-      request({ method: 'GET', url: '/admin/customers', params }),
-    getOne: (id: number) => request({ method: 'GET', url: `/admin/customers/${id}` }),
+  // Users/Customers
+  users: {
+    getAll: (params?: { page?: number; per_page?: number; search?: string; role?: string }) =>
+      request({ method: 'GET', url: '/admin/users', params }),
+    getOne: (id: number) => request({ method: 'GET', url: `/admin/users/${id}` }),
+    toggleActive: (id: number) => request({ method: 'PUT', url: `/admin/users/${id}/toggle-active` }),
   },
 };
 
