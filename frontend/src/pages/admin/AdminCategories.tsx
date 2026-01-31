@@ -51,8 +51,8 @@ export default function AdminCategories() {
     setIsLoading(true);
     try {
       const response = await adminApi.categories.getAll();
-      const res = response as any;
-      setCategories(res.data.data);
+      const res = response as { data: Category[] };
+      setCategories(res.data || []);
     } catch (error) {
       console.error('Failed to fetch categories:', error);
       toast.error('Failed to load categories');
