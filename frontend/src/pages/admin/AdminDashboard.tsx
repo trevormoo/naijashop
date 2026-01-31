@@ -257,13 +257,13 @@ export default function AdminDashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Link
-          to="/admin/products/create"
+          to="/admin/products"
           className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all group"
         >
           <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center group-hover:bg-emerald-500 transition-colors">
             <Package className="w-5 h-5 text-emerald-600 group-hover:text-white transition-colors" />
           </div>
-          <span className="font-medium text-gray-700 text-sm">Add Product</span>
+          <span className="font-medium text-gray-700 text-sm">Products</span>
         </Link>
         <Link
           to="/admin/orders"
