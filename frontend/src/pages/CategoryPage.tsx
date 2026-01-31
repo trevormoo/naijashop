@@ -75,8 +75,6 @@ export default function CategoryPage() {
     }).format(amount);
   };
 
-  const isLoading = categoryLoading || productsLoading;
-
   if (categoryLoading) {
     return (
       <div className="container-custom py-8 flex justify-center">
