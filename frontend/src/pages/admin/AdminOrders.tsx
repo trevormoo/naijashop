@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '../../services/api';
 import {
@@ -20,12 +20,10 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type OrderStatus = 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-
 interface Order {
   id: number;
   order_number: string;
-  status: OrderStatus;
+  status: string;
   payment_status: string;
   subtotal: number;
   total: number;
@@ -55,17 +53,7 @@ interface Order {
   }>;
 }
 
-interface OrdersResponse {
-  data: Order[];
-  meta: {
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-  };
-}
-
-const statusConfig: Record<OrderStatus, { label: string; color: string; bg: string; icon: React.ElementType }> = {
+const statusConfig: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
   pending: { label: 'Pending', color: 'text-amber-600', bg: 'bg-amber-100', icon: Clock },
   confirmed: { label: 'Confirmed', color: 'text-blue-600', bg: 'bg-blue-100', icon: CheckCircle },
   processing: { label: 'Processing', color: 'text-indigo-600', bg: 'bg-indigo-100', icon: Package },
@@ -74,7 +62,7 @@ const statusConfig: Record<OrderStatus, { label: string; color: string; bg: stri
   cancelled: { label: 'Cancelled', color: 'text-red-600', bg: 'bg-red-100', icon: XCircle },
 };
 
-const statusFlow: OrderStatus[] = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
+const statusFlow: string[] = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
 
 export default function AdminOrders() {
   const queryClient = useQueryClient();
@@ -83,7 +71,7 @@ export default function AdminOrders() {
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  const { data, isLoading, error } = useQuery<OrdersResponse>({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['adminOrders', page, search, statusFilter],
     queryFn: () => adminApi.orders.getAll({
       page,
@@ -123,7 +111,7 @@ export default function AdminOrders() {
     });
   };
 
-  const getNextStatus = (currentStatus: OrderStatus): OrderStatus | null => {
+  const getNextStatus = (currentStatus: string): string | null => {
     const currentIndex = statusFlow.indexOf(currentStatus);
     if (currentIndex === -1 || currentIndex === statusFlow.length - 1) return null;
     return statusFlow[currentIndex + 1];
@@ -206,7 +194,7 @@ export default function AdminOrders() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {orders.map((order) => {
+              {orders.map((order: Order) => {
                 const status = statusConfig[order.status] || statusConfig.pending;
                 const StatusIcon = status.icon;
                 const nextStatus = getNextStatus(order.status);

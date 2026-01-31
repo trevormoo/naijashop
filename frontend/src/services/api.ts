@@ -288,6 +288,78 @@ export const recentlyViewedApi = {
     request({ method: 'GET', url: '/recently-viewed', params: { limit } }),
 };
 
+// Admin API Types
+interface AdminProduct {
+  id: number;
+  name: string;
+  slug: string;
+  sku: string;
+  price: number;
+  compare_price?: number;
+  stock_quantity: number;
+  is_active: boolean;
+  is_featured: boolean;
+  category?: { id: number; name: string };
+  image_url?: string;
+}
+
+interface AdminOrder {
+  id: number;
+  order_number: string;
+  status: string;
+  payment_status: string;
+  subtotal: number;
+  total: number;
+  items_count: number;
+  created_at: string;
+  user?: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+  billing?: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    state: string;
+  };
+  items?: Array<{
+    id: number;
+    product_name: string;
+    quantity: number;
+    unit_price: number;
+    total: number;
+  }>;
+}
+
+interface AdminCustomer {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string;
+  role: string;
+  is_active: boolean;
+  email_verified_at?: string;
+  orders_count?: number;
+  created_at: string;
+  last_login_at?: string;
+}
+
+interface PaginatedResponse<T> {
+  data: T[];
+  meta: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+}
+
 // Admin API
 export const adminApi = {
   // Dashboard
@@ -303,19 +375,19 @@ export const adminApi = {
     getAll: (params?: { page?: number; per_page?: number; search?: string }) =>
       request({ method: 'GET', url: '/admin/categories', params }),
     getOne: (id: number) => request({ method: 'GET', url: `/admin/categories/${id}` }),
-    create: (data: any) => request({ method: 'POST', url: '/admin/categories', data }),
-    update: (id: number, data: any) =>
+    create: <T extends object>(data: T) => request({ method: 'POST', url: '/admin/categories', data }),
+    update: <T extends object>(id: number, data: T) =>
       request({ method: 'PUT', url: `/admin/categories/${id}`, data }),
     delete: (id: number) => request({ method: 'DELETE', url: `/admin/categories/${id}` }),
   },
 
   // Products
   products: {
-    getAll: (params?: { page?: number; per_page?: number; search?: string; category?: string }) =>
+    getAll: (params?: { page?: number; per_page?: number; search?: string; category?: string }): Promise<PaginatedResponse<AdminProduct>> =>
       request({ method: 'GET', url: '/admin/products', params }),
     getOne: (id: number) => request({ method: 'GET', url: `/admin/products/${id}` }),
-    create: (data: any) => request({ method: 'POST', url: '/admin/products', data }),
-    update: (id: number, data: any) =>
+    create: <T extends object>(data: T) => request({ method: 'POST', url: '/admin/products', data }),
+    update: <T extends object>(id: number, data: T) =>
       request({ method: 'PUT', url: `/admin/products/${id}`, data }),
     delete: (id: number) => request({ method: 'DELETE', url: `/admin/products/${id}` }),
   },
@@ -327,7 +399,7 @@ export const adminApi = {
       per_page?: number;
       status?: string;
       search?: string;
-    }) => request({ method: 'GET', url: '/admin/orders', params }),
+    }): Promise<PaginatedResponse<AdminOrder>> => request({ method: 'GET', url: '/admin/orders', params }),
     getOne: (id: number) => request({ method: 'GET', url: `/admin/orders/${id}` }),
     updateStatus: (id: number, status: string) =>
       request({ method: 'PUT', url: `/admin/orders/${id}/status`, data: { status } }),
@@ -335,7 +407,7 @@ export const adminApi = {
 
   // Users/Customers
   users: {
-    getAll: (params?: { page?: number; per_page?: number; search?: string; role?: string }) =>
+    getAll: (params?: { page?: number; per_page?: number; search?: string; role?: string }): Promise<PaginatedResponse<AdminCustomer>> =>
       request({ method: 'GET', url: '/admin/users', params }),
     getOne: (id: number) => request({ method: 'GET', url: `/admin/users/${id}` }),
     toggleActive: (id: number) => request({ method: 'PUT', url: `/admin/users/${id}/toggle-active` }),

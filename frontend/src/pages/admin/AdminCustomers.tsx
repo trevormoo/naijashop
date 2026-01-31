@@ -31,22 +31,12 @@ interface Customer {
   last_login_at?: string;
 }
 
-interface CustomersResponse {
-  data: Customer[];
-  meta: {
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-  };
-}
-
 export default function AdminCustomers() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, error } = useQuery<CustomersResponse>({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['adminCustomers', page, search],
     queryFn: () => adminApi.users.getAll({
       page,
@@ -137,7 +127,7 @@ export default function AdminCustomers() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {customers.map((customer) => (
+              {customers.map((customer: Customer) => (
                 <tr key={customer.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">

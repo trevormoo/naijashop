@@ -31,16 +31,6 @@ interface Product {
   image_url?: string;
 }
 
-interface ProductsResponse {
-  data: Product[];
-  meta: {
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-  };
-}
-
 export default function AdminProducts() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
@@ -57,7 +47,7 @@ export default function AdminProducts() {
     is_featured: false,
   });
 
-  const { data, isLoading, error } = useQuery<ProductsResponse>({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['adminProducts', page, search],
     queryFn: () => adminApi.products.getAll({ page, per_page: 10, search: search || undefined }),
   });
@@ -232,7 +222,7 @@ export default function AdminProducts() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {products.map((product) => (
+              {products.map((product: Product) => (
                 <tr key={product.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">

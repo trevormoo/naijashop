@@ -5,13 +5,23 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\Refund;
+use App\Services\PaystackService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
+    protected PaystackService $paystackService;
+
+    public function __construct(PaystackService $paystackService)
+    {
+        $this->paystackService = $paystackService;
+    }
+
     /**
      * Display a listing of user's orders.
      */
@@ -91,10 +101,9 @@ class OrderController extends Controller
         // Restore stock
         $order->restoreStock();
 
-        // Update payment status if paid
+        // Process refund if order was paid
         if ($order->isPaid()) {
-            $order->update(['payment_status' => Order::PAYMENT_REFUNDED]);
-            // TODO: Trigger refund process
+            $this->processRefund($order, $request->reason);
         }
 
         $order->load('items');
@@ -199,5 +208,69 @@ class OrderController extends Controller
         ];
 
         return $timeline;
+    }
+
+    /**
+     * Process refund for a cancelled order.
+     */
+    private function processRefund(Order $order, ?string $reason = null): void
+    {
+        $payment = $order->payments()->successful()->first();
+
+        if (!$payment || !$payment->canBeRefunded()) {
+            Log::warning('Refund not possible for order', [
+                'order_id' => $order->id,
+                'reason' => 'No successful payment or payment already refunded',
+            ]);
+            return;
+        }
+
+        // Create refund record
+        $refund = Refund::create([
+            'payment_id' => $payment->id,
+            'order_id' => $order->id,
+            'amount' => $payment->refundable_amount,
+            'currency' => $payment->currency,
+            'status' => Refund::STATUS_PENDING,
+            'reason' => $reason ?? 'Order cancelled by customer',
+        ]);
+
+        try {
+            // Call Paystack refund API
+            $response = $this->paystackService->createRefund([
+                'transaction' => $payment->gateway_reference,
+                'amount' => $payment->refundable_amount * 100, // Convert to kobo
+            ]);
+
+            if ($response['status'] ?? false) {
+                $refund->markAsProcessing();
+
+                // Update payment status
+                $payment->processRefund($payment->refundable_amount, $reason);
+
+                // Update order payment status
+                $order->update(['payment_status' => Order::PAYMENT_REFUNDED]);
+
+                Log::info('Refund initiated successfully', [
+                    'order_id' => $order->id,
+                    'refund_id' => $refund->id,
+                    'amount' => $payment->refundable_amount,
+                ]);
+            } else {
+                $refund->markAsFailed();
+
+                Log::error('Paystack refund failed', [
+                    'order_id' => $order->id,
+                    'response' => $response,
+                ]);
+            }
+        } catch (\Exception $e) {
+            $refund->markAsFailed();
+
+            Log::error('Refund processing exception', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }
