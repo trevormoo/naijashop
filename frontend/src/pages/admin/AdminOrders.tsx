@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, createElement } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '../../services/api';
 import {
@@ -90,7 +90,7 @@ export default function AdminOrders() {
       per_page: 10,
       search: search || undefined,
       status: statusFilter || undefined
-    }),
+    }) as Promise<OrdersResponse>,
   });
 
   const updateStatusMutation = useMutation({
@@ -323,7 +323,7 @@ export default function AdminOrders() {
               {/* Status */}
               <div className="flex items-center gap-4">
                 <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${statusConfig[selectedOrder.status].bg} ${statusConfig[selectedOrder.status].color}`}>
-                  {React.createElement(statusConfig[selectedOrder.status].icon, { className: 'w-4 h-4' })}
+                  {createElement(statusConfig[selectedOrder.status].icon, { className: 'w-4 h-4' })}
                   {statusConfig[selectedOrder.status].label}
                 </span>
                 <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${selectedOrder.payment_status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>

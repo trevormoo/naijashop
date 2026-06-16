@@ -59,7 +59,7 @@ export default function AdminProducts() {
 
   const { data, isLoading, error } = useQuery<ProductsResponse>({
     queryKey: ['adminProducts', page, search],
-    queryFn: () => adminApi.products.getAll({ page, per_page: 10, search: search || undefined }),
+    queryFn: () => adminApi.products.getAll({ page, per_page: 10, search: search || undefined }) as Promise<ProductsResponse>,
   });
 
   const deleteMutation = useMutation({

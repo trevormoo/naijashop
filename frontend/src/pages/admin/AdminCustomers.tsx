@@ -53,7 +53,7 @@ export default function AdminCustomers() {
       per_page: 10,
       search: search || undefined,
       role: 'customer'
-    }),
+    }) as Promise<CustomersResponse>,
   });
 
   const toggleActiveMutation = useMutation({
